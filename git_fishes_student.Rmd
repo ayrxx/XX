@@ -33,6 +33,11 @@ library(pacman)
 p_load(bookdown, tidyverse, ggforce, flextable, latex2exp, png, magick) # basically just list all the packages you want here
 
 ```
+```{r}
+library(tidyr)
+library(dplyr)
+```
+
 
 # **Task 1**
 
