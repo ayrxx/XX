@@ -33,9 +33,14 @@ library(pacman)
 p_load(bookdown, tidyverse, ggforce, flextable, latex2exp, png, magick) # basically just list all the packages you want here
 
 ```
+
 ```{r}
 library(tidyr)
 library(dplyr)
+install.packages('plotrix')
+library('plotrix')
+install.packages('flextable')
+library('flextable')
 ```
 
 
@@ -59,7 +64,7 @@ This task involves cloning your repository on your computer. Where should we pla
 ```{r, answer1, echo=TRUE, eval = FALSE}
 
 ## Write your answer here. 
-
+# It used to be version control. Because the data uploaded on GitHub can be shared by everyone, it is easy to leak information and unsafe.
 ```
 
 I'd usually suggest placing your repo in a cloud storage system like, *OneDrive*, *Dropbox*, or *GoogleDrive*. These will ensure that all your files are backed up and *GitHub* will provide a record of the detailed history. 
@@ -69,7 +74,7 @@ Before moving on you might have noticed that the code block above has a name `an
 >**Question 2**: In the second code block called `answer1` if we change echo = TRUE to echo = FALSE what will happen to the code block `answer1` when you render it?
 
 ```{r answer2, echo=TRUE, eval = FALSE}
-# Write your answer here
+# Echo = true displays both the code block and the result. Echo = false does not display the code block, but displays the result.
 ```
 
 **Important**: Notice that `eval = FALSE` for many code chunks. When you complete the tasks. Make sure to change these to `TRUE` otherwise you will find your code does not run!
@@ -126,22 +131,35 @@ First, write some code below to remove missing data.
 ```{r, rmMiss}
 # Code to removing missing data from the `OA_activitydat_20190302_BIOL3207.csv` data frame. 
 
-data <- read.csv("data/OA_activitydat_20190302_BIOL3207.csv")
-data
-is.na(data)
-library(tidyverse)
-data %>% filter(!(is.na(data)))
+data_clean <- data%>%filter(!(is.na(activity)))
+data_clean
 ```
 
 Second, drop out irrelevant columns and check that there are no spelling issues in `species` and `treatment`. Create a table of summary data that includes: 1) the mean, 2) the standard error and 3) the sample sizes of unique fish across ALL six fish species for each treatment. This will also help you detect any spelling errors. You can use the R package [`flextable`](https://ardata-fr.github.io/flextable-book/) to print out the results in a nice neat format! If you haven't heard about `flextable` spend 10 or so minutes having a look at it's functionality. It's incredible! You'll use this for tables throughout.
 
 ```{r summaryTab}
 # Drop irrelevant columns
-
+data_clean %>% select("species","treatment","animal_id","activity")
 # Check spelling in species and treatment but also generate a summary table
-
+data_clean$species <- as.factor(data_clean$species)
+data_clean$treatment <- as.factor(data_clean$treatment)
+levels(data_clean$species)
+levels(data_clean$treatment)
+data_new <- data_clean %>%
+  group_by(species,treatment) %>%
+  summarise(mean_activity = mean(activity),
+            mean_sl=mean(sl),
+            standarderror_activity=std.error(activity),
+            standarderror_sl=std.error(sl))
 # Use flextable to render the summary table in a tidy format
-
+flextable(
+  data_new,
+  col_keys = names(data_new),
+  cwidth = 0.75,
+  cheight = 0.25,
+  defaults = list(),
+  theme_fun = theme_booktabs
+)
 ```
 
 **STOP**: Before moving on, it's a good time to establish some good *GitHub* practices. You have just done an important step. It's time to save this file, stage it and commit it so that you have a record. Push these changes up using *GitHub Desktop*. It's important to do this frequently. It's probably not needed after every line of code, but it's good to do this when you have completed an important coding step. Of course, there's no harm in doing it more often. It will provide fine-scale tracking for you!
