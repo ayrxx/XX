@@ -177,9 +177,9 @@ Ignoring figures can be important because they take up quite a lot of space in y
 
 ```{r, prettyfig, fig.align='center', fig.cap="add a legend here"}
 # ggplot figure showing mean activity for each treatment (Control, OA) for each species.
-ggplot(data = data_new, mapping = aes(x = treatment, y = mean_activity,color=species)) +
+ggplot1<-ggplot(data = data_new, mapping = aes(x = treatment, y = mean_activity,color=species)) +
   geom_point()
-
+ggplot1
 ```
 
 **Stretch Task**: The Clark et al. 2020 paper plots some pretty pictures on their figures. You have access to a folder called "pics/". Add the pics of the difference species from the "pics/" folder to your new plot. Explore the function `annotation_raster()` which might help you achieve this goal.
@@ -191,9 +191,10 @@ Now that you have the figure you may also want to write / save it as a separate 
 ```{r, savefig}
 # Use ggsave to save the figure
 
-path <- "./output/figure/ggplot.csv"
+setwd("./output/figure")
+plot1 = ggplot1
 
-write.csv(`df, file = path)
+ggsave("plot.png",plot1)
 ```
 
 >**Question 6**: Given that you have added `output/figures/` to your `.gitignore` file describe what you notice about what you see in *GitHub Desktop*. 
