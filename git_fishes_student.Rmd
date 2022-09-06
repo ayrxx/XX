@@ -41,6 +41,7 @@ install.packages('plotrix')
 library('plotrix')
 install.packages('flextable')
 library('flextable')
+library(ggplot2)
 ```
 
 
@@ -62,9 +63,7 @@ This task involves cloning your repository on your computer. Where should we pla
 >**Question 1**: Why should you not rely on *GitHub* as a backup?
 
 ```{r, answer1, echo=TRUE, eval = FALSE}
-
-## Write your answer here. 
-# It used to be version control. Because the data uploaded on GitHub can be shared by everyone, it is easy to leak information and unsafe.
+## It used to be version control. Because the data uploaded on GitHub can be shared by everyone, it is easy to leak information and unsafe.
 ```
 
 I'd usually suggest placing your repo in a cloud storage system like, *OneDrive*, *Dropbox*, or *GoogleDrive*. These will ensure that all your files are backed up and *GitHub* will provide a record of the detailed history. 
@@ -74,7 +73,7 @@ Before moving on you might have noticed that the code block above has a name `an
 >**Question 2**: In the second code block called `answer1` if we change echo = TRUE to echo = FALSE what will happen to the code block `answer1` when you render it?
 
 ```{r answer2, echo=TRUE, eval = FALSE}
-# Echo = true displays both the code block and the result. Echo = false does not display the code block, but displays the result.
+## Echo = true displays both the code block and the result. Echo = false does not display the code block, but displays the result.
 ```
 
 **Important**: Notice that `eval = FALSE` for many code chunks. When you complete the tasks. Make sure to change these to `TRUE` otherwise you will find your code does not run!
@@ -167,7 +166,7 @@ flextable(
 >**Question 5**: The new version of your Rmarkdown file should now be up on *GitHub*. In the browser window click on your most recent commit. Have a look at the file versioning system. You will notice two files side-by-side. Describe what you notice is being presented online. What do the red and green highlights mean?
 
 ```{r answer5, echo=TRUE, eval=FALSE}
-## Write your answer here....remember to use '#" in front of your text.
+## The red highlights indicate that the version control has not been added, that is, it has just been cloned locally. The green highlights indicate that the version control has been added but has not been submitted yet, that is, the new part is added.
 ```
 
 # **Task 5**
@@ -178,7 +177,8 @@ Ignoring figures can be important because they take up quite a lot of space in y
 
 ```{r, prettyfig, fig.align='center', fig.cap="add a legend here"}
 # ggplot figure showing mean activity for each treatment (Control, OA) for each species.
-
+ggplot(data = data_new, mapping = aes(x = treatment, y = mean_activity,color=species)) +
+  geom_point()
 
 ```
 
@@ -191,6 +191,9 @@ Now that you have the figure you may also want to write / save it as a separate 
 ```{r, savefig}
 # Use ggsave to save the figure
 
+path <- "./output/figure/ggplot.csv"
+
+write.csv(`df, file = path)
 ```
 
 >**Question 6**: Given that you have added `output/figures/` to your `.gitignore` file describe what you notice about what you see in *GitHub Desktop*. 
