@@ -177,12 +177,25 @@ Ignoring figures can be important because they take up quite a lot of space in y
 
 ```{r, prettyfig, fig.align='center', fig.cap="add a legend here"}
 # ggplot figure showing mean activity for each treatment (Control, OA) for each species.
-ggplot1<-ggplot(data = data_new, mapping = aes(x = treatment, y = mean_activity,color=species)) +
-  geom_point()
+ggplot1<-ggplot(data = data_new, mapping = aes(x = species, y = mean_activity,color=treatment)) +
+  geom_boxplot()
 ggplot1
 ```
 
 **Stretch Task**: The Clark et al. 2020 paper plots some pretty pictures on their figures. You have access to a folder called "pics/". Add the pics of the difference species from the "pics/" folder to your new plot. Explore the function `annotation_raster()` which might help you achieve this goal.
+
+```{r}
+pics1<-readPNG("./pics/acantho.png")
+pics2<-readPNG("./pics/ambon.png")
+pics3<-readPNG("./pics/chromis.png")
+pics4<-readPNG("./pics/humbug.png")
+pics5<-readPNG("./pics/lemon.png")
+pics6<-readPNG("./pics/whitedams.png")
+ggplot1<-ggplot(data = data_new, mapping = aes(x = species, y = mean_activity,color=treatment)) +
+  geom_boxplot()+annotation_raster(pics1,0.5,1.5,20,25)+annotation_raster(pics2,1.5,2.5,20,25)+annotation_raster(pics3,2.5,3.5,30,35)+annotation_raster(pics4,3.5,4.5,20,25)+annotation_raster(pics5,4.5,5.5,20,25)+annotation_raster(pics6,5.5,6.5,20,25)
+ggplot1
+```
+
 
 Note the code chunk used to make the figure. It has a `fig.cap` argument. That means Rmarkdown knows it's a figure and it will allow you to create a figure reference call. In other words, we can refer to our Figure \@ref(fig:prettyfig) by referring to the label for the chunk. This will automatically make a legend for us too (assuming you add one in). The same concept applied to Tables but the legend goes above these.
 
@@ -223,8 +236,8 @@ data2 <- data_new %>% filter(species=="lemon")
 data3 <- data_new %>% filter(species=="acantho")
 datanew <- rbind(data1,data2,data3)
 datanew
-ggplotnew<-ggplot(data = datanew, mapping = aes(x = treatment, y = mean_activity,color=species)) +
-  geom_point()
+ggplotnew<-ggplot(data = datanew, mapping = aes(x = species, y = mean_activity,color=treatment)) +
+  geom_boxplot()+annotation_raster(pics1,0.5,1.5,20,22)+annotation_raster(pics3,1.5,2.5,20,22)+annotation_raster(pics5,2.5,3.5,20,22)
 ggplotnew
 ```
 
@@ -264,32 +277,35 @@ Here, run some statistical tests to determine, for each species, whether the con
 data0 <- data_clean %>% select("species", "treatment", "animal_id", "activity")
 data1 <- data0[which(data0$species=='chromis'),]
 data1
-
 data2 <- data0[which(data0$species=='lemon'),]
 data2
-
 data3 <- data0[which(data0$species=='acantho'),]
 data3
-
 data4 <- data0[which(data0$species=='ambon'),]
 data4
-
 data5 <- data0[which(data0$species=='humbug'),]
 data5
-
 data6 <- data0[which(data0$species=='whitedams'),]
 data6
 
-t.test(data1$activity ~ data1$treatment)
-t.test(data2$activity ~ data2$treatment)
-t.test(data3$activity ~ data3$treatment)
-t.test(data4$activity ~ data4$treatment)
-t.test(data5$activity ~ data5$treatment)
-t.test(data6$activity ~ data6$treatment)
+data11<-t.test(data1$activity ~ data1$treatment)
+data22<-t.test(data2$activity ~ data2$treatment)
+data33<-t.test(data3$activity ~ data3$treatment)
+data44<-t.test(data4$activity ~ data4$treatment)
+data55<-t.test(data5$activity ~ data5$treatment)
+data66<-t.test(data6$activity ~ data6$treatment)
+data_statistic <- c(data11$statistic,data22$statistic,data33$statistic,data44$statistic,data55$statistic,data66$statistic)
+data_pvalue <- c(data11$p.value,data22$p.value,data33$p.value,data44$p.value,data55$p.value,data66$p.value)
+data_df <- c(data11$parameter,data22$parameter,data33$parameter,data44$parameter,data55$parameter,data66$parameter)
+
+as.data.frame(data_statistic)
+is.data.frame(data_statistic)
+names_species <- c('chromis','lemon','acantho','ambon','humbug','whitedams')
 ```
 
 ```{r, table1, echo=TRUE, eval=TRUE, tab.cap = "write a caption here"}
 # Using the resulting object created above, which should be a table with all the summary statistics, t, df and p-value for each species create a table. Note that there is a tab.cap argument in the chunk arguments. Write a caption here. 
+tibble(names_species,data_statistic,data_pvalue,data_df)
 ```
 
 Now that you have a table, you can reference it within a document. For example, you can make a call to Table \@ref(tab:table1) by referring to the name of the code chunk. When you knit the html it will create a hyperlink to your table and insert a legend above the table for you. How cool is that!?
