@@ -191,7 +191,7 @@ Now that you have the figure you may also want to write / save it as a separate 
 ```{r, savefig}
 # Use ggsave to save the figure
 
-setwd("./output/figure")
+setwd("./output/figures")
 plot1 = ggplot1
 
 ggsave("plot.png",plot1)
@@ -200,7 +200,7 @@ ggsave("plot.png",plot1)
 >**Question 6**: Given that you have added `output/figures/` to your `.gitignore` file describe what you notice about what you see in *GitHub Desktop*. 
 
 ```{r}
-## Write your answer here
+## Before adding in the .gitignore file, I saw the new ggplot I made and the path of the ggplot. Suppose we add this file, we may not see the plot or the path because the purpose of adding this file is to cancel the tracking of this file.
 ```
 
 Last question for this task. I promise! It's important to think very carefully about what you track and ignore.
@@ -208,7 +208,7 @@ Last question for this task. I promise! It's important to think very carefully a
 >**Question 7**: Assume that you added the `pics/` folder to your working directory to plot pictures of each fish on your figure. Do you want to track the files in the pic/ folder on GitHub despite them being .png files? Explain your reasoning. 
 
 ```{r, answer6}
-## Add your answer here
+## I don't think so, because what we track is something that needs to change, and this kind of file doesn't change at any time, so we don't need to track it.
 ```
 
 # **Task 6**
@@ -218,6 +218,14 @@ Now, lets create a new figure in the code block below that simplifies the one pr
 
 ```{r, collabFig, echo=TRUE, eval=TRUE}
 # You want to make changes to your collaborators figure in Task 5. Maybe you want to create a figure that focuses only on three fish species instead of the 5. More specifically, chromis, lemon, and acantho. Add code here to revise their figure to do that.
+data1 <- data_new %>% filter(species=="chromis")
+data2 <- data_new %>% filter(species=="lemon")
+data3 <- data_new %>% filter(species=="acantho")
+datanew <- rbind(data1,data2,data3)
+datanew
+ggplotnew<-ggplot(data = datanew, mapping = aes(x = treatment, y = mean_activity,color=species)) +
+  geom_point()
+ggplotnew
 ```
 
 
@@ -253,7 +261,31 @@ Here, run some statistical tests to determine, for each species, whether the con
 >**Stretch Task**: You can of course do this for each species seperately, but those who want a challenge, think about how you might use a loop or even some wrangling methods you have already learnt from the tidyverse to run these tests across all 6 species in a single block of code. If you're familiar with functions, you can even think about writing your own function! All these strategies will avoid having to copy and paste large chunks of code. If you're repeating anything, writing functions and loops are good ways to simplify.
 
 ```{r, stats, echo=TRUE, eval=TRUE}
-# Add your code here
+data0 <- data_clean %>% select("species", "treatment", "animal_id", "activity")
+data1 <- data0[which(data0$species=='chromis'),]
+data1
+
+data2 <- data0[which(data0$species=='lemon'),]
+data2
+
+data3 <- data0[which(data0$species=='acantho'),]
+data3
+
+data4 <- data0[which(data0$species=='ambon'),]
+data4
+
+data5 <- data0[which(data0$species=='humbug'),]
+data5
+
+data6 <- data0[which(data0$species=='whitedams'),]
+data6
+
+t.test(data1$activity ~ data1$treatment)
+t.test(data2$activity ~ data2$treatment)
+t.test(data3$activity ~ data3$treatment)
+t.test(data4$activity ~ data4$treatment)
+t.test(data5$activity ~ data5$treatment)
+t.test(data6$activity ~ data6$treatment)
 ```
 
 ```{r, table1, echo=TRUE, eval=TRUE, tab.cap = "write a caption here"}
